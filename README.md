@@ -5,6 +5,25 @@ Test harness around the miiCard API Python wrapper library.
 
 This is a quick Django app intended to exercise the miiCard API Python wrapper library available on GitHub as source code and PyPI.
 
+## Running the harness
+Install the MiiCardConsumers library from PyPI:
+    
+    pip install MiiCardConsumers
+
+Install Django, if you haven't already:
+    
+    pip install Django
+
+Pull down the test harness source:
+
+    git clone git://github.com/miiCard/api-wrapper-python-test.git
+
+Fire it up:
+
+    python src/manager.py runserver 8080
+
+Navigate to http://localhost:8080.
+
 ## Usage
 The test harness assumes that you have performed an OAuth exchange with the miiCard service to obtain an access token and access token secret, to complement the consumer key and consumer secret supplied to you by miiCard.
 

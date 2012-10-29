@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.core.context_processors import csrf
-from DjangoTestHarness.TestHarness.models import HarnessViewModel
+from TestHarness.models import HarnessViewModel
 from django.utils.html import escape
 
 from MiiCardConsumers import MiiCardOAuthClaimsService, MiiCardServiceUrls
@@ -28,10 +28,8 @@ def home(request):
         action = request.POST['btn-invoke']
 
     if action and view_model.consumer_key and view_model.consumer_secret and view_model.access_token and view_model.access_token_secret:
-        MiiCardServiceUrls.CLAIMS_SVC = "https://13771debd44744de8b7b1658656eb681.cloudapp.net/api/v1/Claims.svc/json";
         api = MiiCardOAuthClaimsService(view_model.consumer_key, view_model.consumer_secret, view_model.access_token, view_model.access_token_secret)
         
-
         if action == "get-claims":
             view_model.last_get_claims_result = prettify_response(api.get_claims(), prettify_claims)
         elif action == 'is-user-assured':

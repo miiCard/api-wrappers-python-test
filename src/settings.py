@@ -106,7 +106,7 @@ CSRF_COOKIE_DOMAIN = 'localhost' #your domain name
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
-ROOT_URLCONF = 'DjangoTestHarness.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -121,7 +121,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'DjangoTestHarness.TestHarness'
+    'TestHarness'
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
