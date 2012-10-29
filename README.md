@@ -10,7 +10,7 @@ Install the MiiCardConsumers library from PyPI:
     
     pip install MiiCardConsumers
 
-Install Django, if you haven't already:
+Install Django, if you haven't already (as root as required):
     
     pip install Django
 
@@ -20,7 +20,8 @@ Pull down the test harness source:
 
 Fire it up:
 
-    python src/manager.py runserver 8080
+    cd api-wrapper-python-test
+    python src/manage.py runserver 8080
 
 Navigate to http://localhost:8080.
 
