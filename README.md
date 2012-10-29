@@ -1,4 +1,4 @@
-api-wrapper-python-test
+api-wrappers-python-test
 =======================
 
 Test harness around the [miiCard API Python wrapper library](https://github.com/miiCard/api-wrappers-python).
