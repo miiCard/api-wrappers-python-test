@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="Stylesheet" type="text/css" href="/static/bootstrap.min.css" />
+<link rel="Stylesheet" type="text/css" href="/static/Site.css" />
+    <script href="/static/js/jquery-1.8.0.min.js"></script>
+    <script href="/static/js/bootstrap.min.js"></script>
+    <title></title>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <h1>Python miiCard API test harness</h1>
+        </div>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="page-header">
+            <h1>OAuth token settings
+            <small>Enter manually or login with miiCard</small>
+            </h1>
+        </div>
+        <div class="row">
+            <div class="span12">
+                {% if not view_model.consumer_details_provided %}
+                <div class="alert alert-error">
+                    Keys and secrets are required fields.
+                </div>
+                {% endif %}
+
+                <label for="oauth-consumer-key">OAuth Consumer Key</label>
+                <input type="text" name="oauth-consumer-key" value="{{view_model.consumer_key}}"/>
+                <label for="oauth-consumer-secret">OAuth Consumer Secret</label>
+                <input type="text" name="oauth-consumer-secret" value="{{view_model.consumer_secret}}" />
+                <label for="oauth-access-token">OAuth Access Token</label>
+                <input type="text" name="oauth-access-token" value="{{view_model.access_token}}" />
+                <label for="oauth-access-token-secret">OAuth Access Token Secret</label>
+                <input type="text" name="oauth-access-token-secret" value="{{view_model.access_token_secret}}" />
+            </div>
+        </div>
+        <div class="page-header">
+            <h1>API methods
+            <small>Find the method you want to invoke</small>
+            </h1>
+        </div>
+        <div class="page-header">
+            <h2>GetClaims
+            <small>Gets the set of data a user has shared with the application</small>
+            </h2>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <h3>Parameters</h3>
+                <p>There are no parameters</p>
+                <h4>Result</h4>
+                {% if view_model.last_get_claims_result %}
+                <p>{{view_model.last_get_claims_result|safe}}</p>
+                {% endif %}
+                <button type="submit" name="btn-invoke" value="get-claims" class="btn btn-large">Invoke method &raquo;</button>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h2>IsUserAssured
+            <small>Determines if the user has a current financial validation</small>
+            </h2>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <h3>Parameters</h3>
+                <p>There are no parameters</p>
+                <h4>Result</h4>
+                {% if view_model.last_is_user_assured_result %}
+                <p>{{view_model.last_is_user_assured_result|safe}}</p>
+                {% endif %}
+                <button type="submit" name="btn-invoke" value="is-user-assured" class="btn btn-large">Invoke method &raquo;</button>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h2>IsSocialAccountAssured
+            <small>Determines if a given social account belongs to the user</small>
+            </h2>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <h3>Parameters</h3>
+                <label for="social-account-id">Social account ID</label>
+                <input type="text" name="social-account-id" value="{{view_model.social_account_id}}" />
+                <label for="social-account-type">Social account type (e.g. 'Twitter')</label>
+                <input type="text" name="social-account-type" value="{{view_model.social_account_type}}" />
+    
+                <h4>Result</h4>
+                {% if view_model.last_is_social_account_assured_result %}
+                <p>{{view_model.last_is_social_account_assured_result|safe}}</p>
+                {% endif %}
+                <button type="submit" name="btn-invoke" value="is-social-account-assured" class="btn btn-large">Invoke method &raquo;</button>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h2>AssuranceImage
+            <small>Renders a graphical representation of LOA</small>
+            </h2>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <h3>Parameters</h3>
+                <label for="social-account-id">Image type</label>
+                <input type="text" name="assurance-image-type" value="{{view_model.assurance_image_type}}" />
+    
+                <h4>Result</h4>
+                {% if view_model.show_assurance_image %}
+                <p><img src="/assuranceimage?oauth-consumer-key={{view_model.consumer_key|urlencode}}&oauth-consumer-secret={{view_model.consumer_secret|urlencode}}&oauth-access-token={{view_model.access_token|urlencode}}&&oauth-access-token-secret={{view_model.access_token_secret|urlencode}}&type={{view_model.assurance_image_type}}" /></p>
+                {% endif %}
+                <button type="submit" name="btn-invoke" value="assurance-image" class="btn btn-large">Invoke method &raquo;</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
