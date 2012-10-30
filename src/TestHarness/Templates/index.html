@@ -5,7 +5,11 @@
 <link rel="Stylesheet" type="text/css" href="/static/Site.css" />
     <script href="/static/js/jquery-1.8.0.min.js"></script>
     <script href="/static/js/bootstrap.min.js"></script>
-    <title></title>
+    <title>miiCard Python API Wrapper Test Harness</title>
+    <style type="text/css">
+    .page-header { margin-top: 50px; margin-bottom: 10px; }
+    input[type=text] { width: 50%; }
+    </style>
 </head>
 
 <body>
@@ -20,7 +24,7 @@
         {% csrf_token %}
         <div class="page-header">
             <h1>OAuth token settings
-            <small>Enter manually or login with miiCard</small>
+            <small>Enter manually</small>
             </h1>
         </div>
         <div class="row">
@@ -117,6 +121,62 @@
                 <p><img src="/assuranceimage?oauth-consumer-key={{view_model.consumer_key|urlencode}}&oauth-consumer-secret={{view_model.consumer_secret|urlencode}}&oauth-access-token={{view_model.access_token|urlencode}}&&oauth-access-token-secret={{view_model.access_token_secret|urlencode}}&type={{view_model.assurance_image_type}}" /></p>
                 {% endif %}
                 <button type="submit" name="btn-invoke" value="assurance-image" class="btn btn-large">Invoke method &raquo;</button>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h2>CreateIdentitySnapshot
+            <small>Create a point-in-time snapshot of a miiCard member's identity</small>
+            </h2>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <h3>Parameters</h3>
+                <p>There are no parameters</p>
+
+                <h4>Result</h4>
+                {% if view_model.last_create_identity_snapshot_result %}
+                <p>{{ view_model.last_create_identity_snapshot_result|safe }}</p>
+                {% endif %}
+                <button type="submit" name="btn-invoke" value="create-identity-snapshot" class="btn btn-large">Invoke method &raquo;</button>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h2>GetIdentitySnapshotDetails
+            <small>Retrieve metadata about an identity snapshot</small>
+            </h2>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <h3>Parameters</h3>
+                <label for="snapshot-details-id">Snapshot ID (blank to list all)</label>
+                <input type="text" name="snapshot-details-id" value="{{ view_model.snapshot_details_id }}" />
+
+                <h4>Result</h4>
+                {% if view_model.last_get_identity_snapshot_details_result %}
+                <p>{{ view_model.last_get_identity_snapshot_details_result|safe }}</p>
+                {% endif %}
+                <button type="submit" name="btn-invoke" value="get-identity-snapshot-details" class="btn btn-large">Invoke method &raquo;</button>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h2>GetIdentitySnapshot
+            <small>Retrieve a previously created snapshot of a miiCard member's identity</small>
+            </h2>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <h3>Parameters</h3>
+                <label for="snapshot-id">Snapshot ID</label>
+                <input type="text" name="snapshot-id" value="{{ view_model.snapshot_id }}" />
+
+                <h4>Result</h4>
+                {% if view_model.last_get_identity_snapshot_result %}
+                <p>{{ view_model.last_get_identity_snapshot_result|safe}}</p>
+                {% endif %}
+                <button type="submit" name="btn-invoke" value="get-identity-snapshot" class="btn btn-large">Invoke method &raquo;</button>
             </div>
         </div>
     </form>

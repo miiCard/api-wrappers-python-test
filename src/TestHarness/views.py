@@ -25,6 +25,9 @@ def home(request):
 
         view_model.assurance_image_type = request.POST['assurance-image-type']
 
+        view_model.snapshot_id = request.POST['snapshot-id']
+        view_model.snapshot_details_id = request.POST['snapshot-details-id']
+
         action = request.POST['btn-invoke']
 
     if action and view_model.consumer_key and view_model.consumer_secret and view_model.access_token and view_model.access_token_secret:
@@ -35,9 +38,16 @@ def home(request):
         elif action == 'is-user-assured':
             view_model.last_is_user_assured_result = prettify_response(api.is_user_assured(), None)
         elif action == 'is-social-account-assured' and view_model.social_account_type and view_model.social_account_id:
-            view_model.last_is_social_account_assured_result = prettify_response(api.is_social_account_assured(view_model.social_account_id, view_model.social_account_type), None);
+            view_model.last_is_social_account_assured_result = prettify_response(api.is_social_account_assured(view_model.social_account_id, view_model.social_account_type), None)
         elif action == 'assurance-image' and view_model.assurance_image_type:
             view_model.show_assurance_image = True
+        elif action == 'create-identity-snapshot':
+            view_model.last_create_identity_snapshot_result = prettify_response(api.create_identity_snapshot(), prettify_identity_snapshot_details)
+        elif action == 'get-identity-snapshot-details':
+            view_model.last_get_identity_snapshot_details_result = prettify_response(api.get_identity_snapshot_details(view_model.snapshot_details_id), prettify_identity_snapshot_details)
+        elif action == 'get-identity-snapshot' and view_model.snapshot_id:
+            view_model.last_get_identity_snapshot_result = prettify_response(api.get_identity_snapshot(view_model.snapshot_id), prettify_identity_snapshot)
+
     elif action:
         view_model.show_oauth_details_required_error = True
 
@@ -64,6 +74,7 @@ def prettify_response(response, data_processor):
     toReturn += render_fact('Status', response.status)
     toReturn += render_fact('Error code', response.error_code)
     toReturn += render_fact('Error message', response.error_message)
+    toReturn += render_fact('Is a test user?', response.is_test_user)
     
     if not data_processor:
         toReturn += render_fact('Data', response.data.__str__())
@@ -71,7 +82,41 @@ def prettify_response(response, data_processor):
     toReturn += '</div>'
     
     if data_processor:
-        toReturn += data_processor(response.data)
+        if type(response.data) is list:
+            ct = 0
+
+            for data_item in response.data:
+                toReturn += "<div class='fact'><h4>[" + ct.__str__() + "]</h4>";
+                toReturn += data_processor(data_item)
+                toReturn += "</div>"
+
+                ct += 1
+        else:
+            toReturn += data_processor(response.data)
+
+    return toReturn
+
+def prettify_identity_snapshot_details(snapshot_details):
+    toReturn = "<div class='fact'>"
+
+    toReturn += render_fact("Snapshot ID", snapshot_details.snapshot_id)
+    toReturn += render_fact("Username", snapshot_details.username)
+    toReturn += render_fact("Timestamp",  snapshot_details.timestamp_utc)
+    toReturn += render_fact("Was a test user?", snapshot_details.was_test_user)
+    toReturn += "</div>"
+
+    return toReturn
+
+def prettify_identity_snapshot(identity_snapshot):
+    toReturn = "<div class='fact'>"
+
+    toReturn += render_fact_heading("Snapshot details")
+    toReturn += prettify_identity_snapshot_details(identity_snapshot.details)
+
+    toReturn += render_fact_heading("Snapshot contents")
+    toReturn += prettify_claims(identity_snapshot.snapshot)
+
+    toReturn += "</div>"
 
     return toReturn
 
