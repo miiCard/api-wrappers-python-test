@@ -13,7 +13,6 @@ class HarnessViewModel(models.Model):
     last_get_claims_result = ''
     last_is_user_assured_result = ''
     last_is_social_account_assured_result = ''
-    last_create_snapshot_result = ''
     last_get_identity_snapshot_details_result = ''
     last_get_identity_snapshot_result = ''
     show_assurance_image = ''

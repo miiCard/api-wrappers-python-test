@@ -41,8 +41,6 @@ def home(request):
             view_model.last_is_social_account_assured_result = prettify_response(api.is_social_account_assured(view_model.social_account_id, view_model.social_account_type), None)
         elif action == 'assurance-image' and view_model.assurance_image_type:
             view_model.show_assurance_image = True
-        elif action == 'create-identity-snapshot':
-            view_model.last_create_identity_snapshot_result = prettify_response(api.create_identity_snapshot(), prettify_identity_snapshot_details)
         elif action == 'get-identity-snapshot-details':
             view_model.last_get_identity_snapshot_details_result = prettify_response(api.get_identity_snapshot_details(view_model.snapshot_details_id), prettify_identity_snapshot_details)
         elif action == 'get-identity-snapshot' and view_model.snapshot_id:

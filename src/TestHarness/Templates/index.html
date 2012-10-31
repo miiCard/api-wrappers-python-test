@@ -125,24 +125,6 @@
         </div>
 
         <div class="page-header">
-            <h2>CreateIdentitySnapshot
-            <small>Create a point-in-time snapshot of a miiCard member's identity</small>
-            </h2>
-        </div>
-        <div class="row">
-            <div class="span12">
-                <h3>Parameters</h3>
-                <p>There are no parameters</p>
-
-                <h4>Result</h4>
-                {% if view_model.last_create_identity_snapshot_result %}
-                <p>{{ view_model.last_create_identity_snapshot_result|safe }}</p>
-                {% endif %}
-                <button type="submit" name="btn-invoke" value="create-identity-snapshot" class="btn btn-large">Invoke method &raquo;</button>
-            </div>
-        </div>
-
-        <div class="page-header">
             <h2>GetIdentitySnapshotDetails
             <small>Retrieve metadata about an identity snapshot</small>
             </h2>
