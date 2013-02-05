@@ -128,6 +128,7 @@ def prettify_claims(claims_obj):
     toReturn += render_fact('First name', claims_obj.first_name)
     toReturn += render_fact('Middle name', claims_obj.middle_name)
     toReturn += render_fact('Last name', claims_obj.last_name)
+    toReturn += render_fact('Date of birth', claims_obj.date_of_birth)
     toReturn += render_fact('Identity verified?', claims_obj.identity_assured)
     toReturn += render_fact('Identity last verified', claims_obj.last_verified)
     toReturn += render_fact('Has a public profile?', claims_obj.has_public_profile)
