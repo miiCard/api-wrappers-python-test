@@ -27,6 +27,7 @@ def home(request):
 
         view_model.snapshot_id = request.POST['snapshot-id']
         view_model.snapshot_details_id = request.POST['snapshot-details-id']
+        view_model.snapshot_pdf_id = request.POST['snapshot-pdf-id']
 
         action = request.POST['btn-invoke']
 
@@ -45,6 +46,14 @@ def home(request):
             view_model.last_get_identity_snapshot_details_result = prettify_response(api.get_identity_snapshot_details(view_model.snapshot_details_id), prettify_identity_snapshot_details)
         elif action == 'get-identity-snapshot' and view_model.snapshot_id:
             view_model.last_get_identity_snapshot_result = prettify_response(api.get_identity_snapshot(view_model.snapshot_id), prettify_identity_snapshot)
+        elif action == 'get-identity-snapshot-pdf' and view_model.snapshot_pdf_id:
+            response = api.get_identity_snapshot_pdf(view_model.snapshot_pdf_id)
+
+            toReturn = HttpResponse(response, mimetype='application/pdf')
+            toReturn['Content-Length'] = len(response)
+            toReturn['Content-Disposition'] = 'attachment; filename="' + view_model.snapshot_pdf_id + '"'
+
+            return toReturn
 
     elif action:
         view_model.show_oauth_details_required_error = True

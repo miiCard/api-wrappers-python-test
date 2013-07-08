@@ -24,5 +24,6 @@ class HarnessViewModel(models.Model):
 
     snapshot_details_id = ''
     snapshot_id = ''
+    snapshot_pdf_id = ''
 
     show_oauth_details_required_error = False
