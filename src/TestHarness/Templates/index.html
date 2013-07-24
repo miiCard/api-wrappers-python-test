@@ -152,7 +152,6 @@
 
                 <h4>Result</h4>
                 {% if view_model.show_card_image %}
-                <?php if (isset($showCardImage)) { ?>
                 <p><img src="/cardimage?oauth-consumer-key={{view_model.consumer_key|urlencode}}&oauth-consumer-secret={{view_model.consumer_secret|urlencode}}&oauth-access-token={{view_model.access_token|urlencode}}&&oauth-access-token-secret={{view_model.access_token_secret|urlencode}}&snapshot-id={{view_model.card_image_snapshot_id|urlencode}}&show-email-address={{view_model.card_image_show_email_address}}&show-phone-number={{view_model.card_image_show_phone_number}}&format={{view_model.card_image_format|urlencode}}" /></p>
                 {% endif %}
                 <button type="submit" name="btn-invoke" value="card-image" class="btn btn-large">Invoke method &raquo;</button>
