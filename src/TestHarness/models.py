@@ -26,4 +26,10 @@ class HarnessViewModel(models.Model):
     snapshot_id = ''
     snapshot_pdf_id = ''
 
+    card_image_snapshot_id = ''
+    card_image_show_email_address = False
+    card_image_show_phone_number = False
+    card_image_format = ''
+    show_card_image = False
+
     show_oauth_details_required_error = False

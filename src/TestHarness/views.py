@@ -29,6 +29,11 @@ def home(request):
         view_model.snapshot_details_id = request.POST['snapshot-details-id']
         view_model.snapshot_pdf_id = request.POST['snapshot-pdf-id']
 
+        view_model.card_image_format = request.POST['card-image-format']
+        view_model.card_image_show_email_address = request.POST.get('card-image-show-email-address', 'off') == 'on'
+        view_model.card_image_show_phone_number = request.POST.get('card-image-show-phone-number', 'off') == 'on'
+        view_model.card_image_snapshot_id = request.POST['card-image-snapshot-id']
+
         action = request.POST['btn-invoke']
 
     if action and view_model.consumer_key and view_model.consumer_secret and view_model.access_token and view_model.access_token_secret:
@@ -42,6 +47,8 @@ def home(request):
             view_model.last_is_social_account_assured_result = prettify_response(api.is_social_account_assured(view_model.social_account_id, view_model.social_account_type), None)
         elif action == 'assurance-image' and view_model.assurance_image_type:
             view_model.show_assurance_image = True
+        elif action == 'card-image':
+            view_model.show_card_image = True
         elif action == 'get-identity-snapshot-details':
             view_model.last_get_identity_snapshot_details_result = prettify_response(api.get_identity_snapshot_details(view_model.snapshot_details_id), prettify_identity_snapshot_details)
         elif action == 'get-identity-snapshot' and view_model.snapshot_id:
@@ -74,6 +81,26 @@ def assuranceimage(request):
         toReturn = HttpResponse(response, mimetype='image/png')
         toReturn['Content-Length'] = len(response)
 
+        return toReturn
+
+def cardimage(request):
+    consumer_key = request.GET['oauth-consumer-key']
+    consumer_secret = request.GET['oauth-consumer-secret']
+    access_token = request.GET['oauth-access-token']
+    access_token_secret = request.GET['oauth-access-token-secret']
+
+    format = request.GET['format']
+    snapshot_id = request.GET['snapshot-id']
+    show_email_address = request.GET['show-email-address'] == "True"
+    show_phone_number = request.GET['show-phone-number'] == "True"
+
+    if consumer_key and consumer_secret and access_token and access_token_secret:
+        api = MiiCardOAuthClaimsService(consumer_key, consumer_secret, access_token, access_token_secret)
+        response = api.get_card_image(snapshot_id, show_email_address, show_phone_number, format)
+
+        toReturn = HttpResponse(response, mimetype='image/png')
+        toReturn['Content-Length'] = len(response)
+        
         return toReturn
 
 def prettify_response(response, data_processor):

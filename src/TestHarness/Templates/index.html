@@ -125,6 +125,41 @@
         </div>
 
         <div class="page-header">
+            <h2>CardImage
+            <small>Renders a card-image representation of LOA</small>
+            </h2>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <h3>Parameters</h3>
+                <label for="cardImageSnapshotId">Snapshot ID (optional)</label>
+                <input type="text" name="card-image-snapshot-id" value="{{view_model.card_image_snapshot_id}}" />
+
+                <label for="cardImageFormat">Format (card, signature)</label>
+                <input type="text" name="card-image-format" value="{{view_model.card_image_format}}" />
+
+                {% if view_model.card_image_show_email_address %}
+                  <label class="checkbox"><input type="checkbox" name="card-image-show-email-address" checked="checked" value="on" /> Show email address</label>
+                {% else %}
+                  <label class="checkbox"><input type="checkbox" name="card-image-show-email-address" /> Show email address</label>
+                {% endif %} 
+
+                {% if view_model.card_image_show_phone_number %}
+                  <label class="checkbox"><input type="checkbox" name="card-image-show-phone-number" checked="checked" value="on" /> Show phone number</label>
+                {% else %}
+                  <label class="checkbox"><input type="checkbox" name="card-image-show-phone-number" /> Show phone number</label>
+                {% endif %}
+
+                <h4>Result</h4>
+                {% if view_model.show_card_image %}
+                <?php if (isset($showCardImage)) { ?>
+                <p><img src="/cardimage?oauth-consumer-key={{view_model.consumer_key|urlencode}}&oauth-consumer-secret={{view_model.consumer_secret|urlencode}}&oauth-access-token={{view_model.access_token|urlencode}}&&oauth-access-token-secret={{view_model.access_token_secret|urlencode}}&snapshot-id={{view_model.card_image_snapshot_id|urlencode}}&show-email-address={{view_model.card_image_show_email_address}}&show-phone-number={{view_model.card_image_show_phone_number}}&format={{view_model.card_image_format|urlencode}}" /></p>
+                {% endif %}
+                <button type="submit" name="btn-invoke" value="card-image" class="btn btn-large">Invoke method &raquo;</button>
+            </div>
+        </div>
+
+        <div class="page-header">
             <h2>GetIdentitySnapshotDetails
             <small>Retrieve metadata about an identity snapshot</small>
             </h2>
