@@ -7,5 +7,6 @@ from django.conf.urls.defaults import patterns, include, url
 urlpatterns = patterns('',
     url(r'^$', 'TestHarness.views.home', name='home'),
     url(r'^assuranceimage$', 'TestHarness.views.assuranceimage', name='assuranceimage'),
-    url(r'^cardimage$', 'TestHarness.views.cardimage', name='cardimage')
+    url(r'^cardimage$', 'TestHarness.views.cardimage', name='cardimage'),
+    url(r'^sha1$', 'TestHarness.views.sha1', name='sha1')
 )
