@@ -36,6 +36,7 @@ def home(request):
         view_model.card_image_snapshot_id = request.POST.get('card-image-snapshot-id', None)
 
         view_model.financial_data_modesty_limit = request.POST.get('financial-data-modesty-limit', None)
+        view_model.financial_data_credit_cards_modesty_limit = request.POST.get('financial-data-credit-cards-modesty-limit', None)
 
         view_model.directory_criterion = request.POST.get('directory_criterion', '')
         view_model.directory_criterion_value = request.POST.get('directory_criterion_value', '')
@@ -77,11 +78,18 @@ def home(request):
             return toReturn
         elif action == 'is-refresh-in-progress':
             view_model.is_refresh_in_progress_result = prettify_response(financial_api.is_refresh_in_progress(), None)
+        elif action == 'is-refresh-in-progress-credit-cards':
+            view_model.is_refresh_in_progress_credit_cards_result = prettify_response(financial_api.is_refresh_in_progress_credit_cards(), None)
         elif action == 'refresh-financial-data':
             view_model.refresh_financial_data_result = prettify_response(financial_api.refresh_financial_data(), prettify_refresh_financial_data)
+        elif action == 'refresh-financial-data-credit-cards':
+            view_model.refresh_financial_data_credit_cards_result = prettify_response(financial_api.refresh_financial_data(), prettify_refresh_financial_data_credit_cards)
         elif action == 'get-financial-transactions':
             configuration = PrettifyConfiguration(view_model.financial_data_modesty_limit)
             view_model.get_financial_transactions_result = prettify_response(financial_api.get_financial_transactions(), prettify_financial_transactions, configuration)
+        elif action == 'get-financial-transactions-credit-cards':
+            configuration = PrettifyConfiguration(view_model.financial_data_credit_cards_modesty_limit)
+            view_model.get_financial_transactions_credit_cards_result = prettify_response(financial_api.get_financial_transactions_credit_cards(), prettify_financial_transactions, configuration)
 
     elif action:
         view_model.show_oauth_details_required_error = True
@@ -394,14 +402,24 @@ def render_identity(identity):
 def render_financial_provider(financial_provider, configuration = None):
     toReturn = '<div class="fact">'
     toReturn += render_fact('Name', financial_provider.provider_name)
-    toReturn += render_fact_heading('Financial Accounts')
 
     ct = 0
-    for financial_account in financial_provider.financial_accounts or []:
-        toReturn += '<div class="fact"><h4>[' + ct.__str__() + ']</h4>'
-        toReturn += render_financial_account(financial_account, configuration)
-        toReturn += '</div>'
-        ct += 1
+    if financial_provider.financial_accounts:
+        toReturn += render_fact_heading('Financial Accounts')
+
+        for financial_account in financial_provider.financial_accounts:
+            toReturn += '<div class="fact"><h4>[' + ct.__str__() + ']</h4>'
+            toReturn += render_financial_account(financial_account, configuration)
+            toReturn += '</div>'
+            ct += 1
+    elif financial_provider.financial_credit_cards:
+        toReturn += render_fact_heading('Financial Credit Cards')
+
+        for financial_credit_card in financial_provider.financial_credit_cards:
+            toReturn += '<div class="fact"><h4>[' + ct.__str__() + ']</h4>'
+            toReturn += render_financial_credit_card(financial_credit_card, configuration)
+            toReturn += '</div>'
+            ct += 1
 
     toReturn += '</div>';
 
@@ -429,6 +447,36 @@ def render_financial_account(financial_account, configuration = None):
     toReturn += "<table class='table table-striped table-condensed table-hover'><thead><tr><th>Date</th><th>Description</th><th class='r'>Credit</th><th class='r'>Debit</th></tr></thead><tbody>"
 
     for transaction in financial_account.transactions or []:
+        toReturn += "<tr><td>" + transaction.date.__str__() + "</td><td title='ID: " + transaction.id + "'>" + transaction.description + "</td><td class='r'>" + get_modesty_filtered_amount(transaction.amount_credited, configuration) + "</td><td class='r d'>" + get_modesty_filtered_amount(transaction.amount_debited, configuration) + "</td></tr>"
+
+    toReturn += "</tbody></table>"
+
+    toReturn += '</div>';
+
+    return toReturn
+
+def render_financial_credit_card(financial_credit_card, configuration = None):
+    toReturn = '<div class="fact">'
+
+    toReturn += render_fact('Holder', financial_credit_card.holder)
+    toReturn += render_fact('Account Name', financial_credit_card.account_name)
+    toReturn += render_fact('Account Number', financial_credit_card.account_number)
+    toReturn += render_fact('Type', financial_credit_card.type)
+    toReturn += render_fact('Last Updated (UTC)', financial_credit_card.last_updated_utc)
+    toReturn += render_fact('From Date', financial_credit_card.from_date)
+    toReturn += render_fact('Currency ISO', financial_credit_card.currency_iso)
+    toReturn += render_fact('Credit Limit', get_modesty_filtered_amount(financial_credit_card.credit_limit, configuration))
+    toReturn += render_fact('Running Balance', get_modesty_filtered_amount(financial_credit_card.running_balance, configuration))
+    toReturn += render_fact('Credits Count', financial_credit_card.credits_count)
+    toReturn += render_fact('Credits Sum', get_modesty_filtered_amount(financial_credit_card.credits_sum, configuration))
+    toReturn += render_fact('Debits Count', financial_credit_card.debits_count)
+    toReturn += render_fact('Debits Sum', get_modesty_filtered_amount(financial_credit_card.debits_sum, configuration))
+
+    toReturn += render_fact_heading('Transactions')
+
+    toReturn += "<table class='table table-striped table-condensed table-hover'><thead><tr><th>Date</th><th>Description</th><th class='r'>Credit</th><th class='r'>Debit</th></tr></thead><tbody>"
+
+    for transaction in financial_credit_card.transactions or []:
         toReturn += "<tr><td>" + transaction.date.__str__() + "</td><td title='ID: " + transaction.id + "'>" + transaction.description + "</td><td class='r'>" + get_modesty_filtered_amount(transaction.amount_credited, configuration) + "</td><td class='r d'>" + get_modesty_filtered_amount(transaction.amount_debited, configuration) + "</td></tr>"
 
     toReturn += "</tbody></table>"

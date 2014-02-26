@@ -37,9 +37,13 @@ class HarnessViewModel(models.Model):
     show_oauth_details_required_error = False
 
     is_refresh_in_progress_result = ''
+    is_refresh_in_progress_credit_cards_result = ''
     refresh_financial_data_result = ''
+    refresh_financial_data_credit_cards_result = ''
     get_financial_transactions_result = ''
+    get_financial_transactions_credit_cards_result = ''
     financial_data_modesty_limit = 100
+    financial_data_credit_cards_modesty_limit = 100
 
     directory_criterion = ''
     directory_criterion_value = ''
