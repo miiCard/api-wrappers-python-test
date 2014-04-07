@@ -36,6 +36,9 @@ class HarnessViewModel(models.Model):
 
     show_oauth_details_required_error = False
 
+    is_credit_bureau_refresh_in_progress_result = ''
+    refresh_credit_bureau_data_result = ''
+
     is_refresh_in_progress_result = ''
     is_refresh_in_progress_credit_cards_result = ''
     refresh_financial_data_result = ''

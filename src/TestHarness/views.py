@@ -76,6 +76,10 @@ def home(request):
             toReturn['Content-Disposition'] = 'attachment; filename="' + view_model.snapshot_pdf_id + '"'
 
             return toReturn
+        elif action == 'is-credit-bureau-refresh-in-progress':
+            view_model.is_credit_bureau_refresh_in_progress_result = prettify_response(api.is_credit_bureau_refresh_in_progress(), None)
+        elif action == 'refresh-credit-bureau-data':
+            view_model.refresh_credit_bureau_data_result = prettify_response(api.refresh_credit_bureau_data(), prettify_refresh_credit_bureau_data)
         elif action == 'is-refresh-in-progress':
             view_model.is_refresh_in_progress_result = prettify_response(financial_api.is_refresh_in_progress(), None)
         elif action == 'is-refresh-in-progress-credit-cards':
@@ -277,6 +281,10 @@ def prettify_claims(claims_obj, configuration = None):
         toReturn += '</div>'
         ct += 1
 
+    toReturn += render_fact_heading('Credit bureau data')
+    if claims_obj.credit_bureau_verification:
+        toReturn += render_credit_bureau_verification(claims_obj.credit_bureau_verification)
+
     if claims_obj.public_profile:
         toReturn += '<div class="fact"><h4>Public profile data</h4>'
         toReturn += prettify_claims(claims_obj.public_profile, configuration)
@@ -285,12 +293,32 @@ def prettify_claims(claims_obj, configuration = None):
     toReturn += '</div>'
 
     return toReturn
-   
+
+def prettify_refresh_credit_bureau_data(credit_bureau_refresh_status, configuration = None):
+    toReturn = "<div class='fact'>"
+    toReturn += "<h2>Credit bureau refresh status</h2>"
+
+    toReturn += render_fact('State', credit_bureau_refresh_status.state)
+
+    toReturn += "</div>"
+
+    return toReturn
+
 def prettify_refresh_financial_data(financial_refresh_status, configuration = None):
     toReturn = "<div class='fact'>"
     toReturn += "<h2>Financial Refresh Status</h2>"
 
     toReturn += render_fact('State', financial_refresh_status.state)
+
+    toReturn += "</div>"
+
+    return toReturn
+
+def prettify_refresh_financial_data_credit_cards(financial_credit_card_refresh_status, configuration = None):
+    toReturn = "<div class='fact'>"
+    toReturn += "<h2>Financial Credit Card Refresh Status</h2>"
+
+    toReturn += render_fact('State', financial_credit_card_refresh_status.state)
 
     toReturn += "</div>"
 
@@ -394,6 +422,16 @@ def render_identity(identity):
     toReturn += render_fact('User ID', identity.user_id)
     toReturn += render_fact('Profile URL', identity.profile_url)
     toReturn += render_fact('Verified?', identity.verified)
+
+    toReturn += '</div>'
+
+    return toReturn
+
+def render_credit_bureau_verification(verification):
+    toReturn = '<div class="fact">'
+
+    toReturn += render_fact('Last verified', verification.last_verified)
+    toReturn += render_fact('Data', verification.data)
 
     toReturn += '</div>'
 
